@@ -1,0 +1,37 @@
+services:
+  # Container onde o .NET 9 roda
+  app:
+    image: mcr.microsoft.com/devcontainers/dotnet:1-9.0-bookworm
+    volumes:
+      - ..:/workspaces/${localWorkspaceFolderBasename}:cached
+    command: sleep infinity
+    depends_on:
+      dbinit:
+        condition: service_completed_successfully
+
+  # SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Sunset@12345"
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  # Roda uma vez: cria o banco Sunset e aplica os scripts da pasta banco/
+  dbinit:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: "Sunset@12345"
+    volumes:
+      - ./iniciar-banco.sh:/iniciar-banco.sh:ro
+      - ../banco:/banco:ro
+    entrypoint: ["bash", "/iniciar-banco.sh"]
+    restart: "no"

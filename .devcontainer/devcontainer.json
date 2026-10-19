@@ -1,0 +1,17 @@
+{
+  "name": "Sunset - preview",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "containerEnv": {
+    "ConnectionStrings__Padrao": "Server=db;Database=Sunset;User Id=sa;Password=Sunset@12345;TrustServerCertificate=True"
+  },
+  "forwardPorts": [5157, 5218],
+  "portsAttributes": {
+    "5157": { "label": "Sunset Web", "onAutoForward": "notify" },
+    "5218": { "label": "Sunset Api", "onAutoForward": "notify" }
+  },
+  "customizations": {
+    "vscode": { "extensions": ["ms-dotnettools.csharp"] }
+  }
+}
