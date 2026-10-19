@@ -24,3 +24,7 @@ Copia separada do sistema (igual a Pasta 5 do PIM) so para ver o site no navegad
 - Quando o Codespace desligar, o site sai do ar. Ao ligar de novo, rode `bash rodar-web.sh`.
 - A connection string vem da variavel de ambiente do `devcontainer.json`; o codigo nao foi alterado.
 - O app Flutter (`sunset_app/`) nao e executado aqui.
+
+## Diferenca em relacao a Pasta 5
+
+Somente `Sunset.Web/Program.cs`: o login e o acesso negado redirecionam por caminho relativo (bloco `Events` do cookie). Isso e necessario porque o proxy do Codespaces entrega o pedido com o endereco `localhost`. Nao copie essa mudanca para as pastas do PIM.

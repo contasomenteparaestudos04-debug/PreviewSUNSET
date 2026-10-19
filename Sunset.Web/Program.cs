@@ -39,6 +39,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         opcoes.LoginPath = "/Conta/Login";
         opcoes.AccessDeniedPath = "/Conta/AcessoNegado";
         opcoes.ExpireTimeSpan = TimeSpan.FromHours(8);
+
+        // SO NA COPIA DE PREVIEW (Codespaces): o proxy entrega o pedido ao app com o
+        // endereco "localhost", entao o redirecionamento padrao viraria http://localhost/...
+        // Aqui redirecionamos so pelo caminho (ex.: /Conta/Login?ReturnUrl=...), sem o endereco.
+        opcoes.Events.OnRedirectToLogin = contexto =>
+        {
+            contexto.Response.Redirect(new Uri(contexto.RedirectUri).PathAndQuery);
+            return Task.CompletedTask;
+        };
+        opcoes.Events.OnRedirectToAccessDenied = contexto =>
+        {
+            contexto.Response.Redirect(new Uri(contexto.RedirectUri).PathAndQuery);
+            return Task.CompletedTask;
+        };
     });
 
 var app = builder.Build();
