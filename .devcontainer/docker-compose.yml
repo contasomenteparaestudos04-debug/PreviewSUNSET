@@ -33,5 +33,6 @@ services:
     volumes:
       - ./iniciar-banco.sh:/iniciar-banco.sh:ro
       - ../banco:/banco:ro
+      - ..:/repo
     entrypoint: ["bash", "/iniciar-banco.sh"]
     restart: "no"
